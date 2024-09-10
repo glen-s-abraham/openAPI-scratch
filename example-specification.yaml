@@ -1,0 +1,338 @@
+openapi: 3.0.0
+
+info:
+  title: CMS API Specification
+  description: API Specifications for the CMS system.
+  termsOfService: http://mycollege.com
+  contact:
+    name: Jadhu Singh
+    url: http://mycollege.com/employees/jadhu-singh
+    email: jadhu.singh@mycollege.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: '1.0'
+
+externalDocs:
+  description: More information about the CMS API
+  url: http://mycollege.com/api
+
+servers:
+  - url: http://localhost:44333/api/v1
+    description: Production server
+  - url: http://{hostname}:{port}/stagingapi/v1
+    description: Development server
+    variables:
+      hostname:
+        default: localhost
+      port:
+        default: '3000'
+
+tags:
+  - name: Course
+    description: Operations on Course
+  - name: Student
+    description: Operations on Student
+
+paths:
+  /courses:
+    summary: Operations about courses
+    description: Contains the list of operations on courses
+    
+    get:
+      tags:
+        - Course
+      summary: Get all courses
+      description: Returns the list of all courses
+      operationId: getCourses
+      parameters:
+        - name: sortBy
+          in: query
+          description: The sort order
+          schema:
+            type: string
+            default: asc
+            enum:
+              - asc
+              - desc
+      responses:
+        '200':
+          description: Successfully returned all course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+        default:
+          description: Success
+
+    post:
+      tags:
+        - Course
+      summary: Add a new course
+      description: Adds a new course entry to the system and returns the added course
+      operationId: addCourse
+      requestBody:
+        description: The new course to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '201':
+          $ref: '#/components/responses/CourseSuccess'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+
+  /courses/{courseId}:
+    summary: Operations about individual course
+    description: Contains the list of operations applied on a specific course
+
+    get:
+      tags:
+        - Course
+      summary: Get a specific course
+      description: Returns the details of a specific course
+      operationId: getCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: The unique course ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully returned course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+
+    put:
+      tags:
+        - Course
+      summary: Update a specific course
+      description: Updates the details of a specific course
+      operationId: updateCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: The unique course ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The course details to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        '201':
+          $ref: '#/components/responses/CourseSuccess'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+    
+    delete:
+      tags:
+        - Course
+      summary: Delete a specific course
+      description: removes a course entry from the system
+      operationId: deleteCourse
+      parameters:
+        - name: courseId
+          in: path
+          description: The unique course ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted the course
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+      security: 
+        - BearerAuthentication: []
+  /courses/{courseId}/students:
+    summary: Operations about students belonging to a course
+    description: Contains the list of operations applied on a course's students
+    
+    get:
+      tags:
+        - Course
+      summary: Get students belonging to a course.
+      description: Returns the list of all students enrolled in a course
+      operationId: getCourseStudents
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          description: the unique course id
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully returned all course details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+        default:
+          description: Success
+    post:
+      tags:
+        - Course
+      summary: Add student to a course.
+      description: Returns  students added to the course
+      operationId: addCourseStudents
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          description: the unique course id
+          schema:
+            type: string
+      requestBody:
+        description: Request to add student to a course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+            
+      responses:
+        '201':
+          description: Successfully added student to course
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+        default:
+          description: Success
+  /students:
+    summary: Opearations related to a student.
+    description: Operations related to a student.
+    get:
+      tags:
+        - Student
+      summary: Get a list of all the student
+      description: Get a list of all the students in the system.
+      operationId: getStudents
+      responses:
+        '200':
+          description: A list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                   $ref: '#/components/schemas/Student'
+
+components:
+  schemas:
+    Course:
+      type: object
+      description: Represents a course entry
+      properties:
+        courseId:
+          type: string
+          description: Unique ID of the course
+        courseName:
+          type: string
+          description: Name of the course
+        courseType:
+          type: string
+          description: Type of course
+          enum:
+            - Engineering
+            - Medical
+            - Management
+        courseDuration:
+          type: string
+          description: Duration of the course (in years)
+      required:
+        - courseName
+        - courseDuration
+        - courseType
+      example:
+        courseId: "1"
+        courseName: "Computer Science"
+        courseDuration: "4"
+        courseType: "Engineering"
+    
+    Student:
+      type: object
+      properties:
+        studentId:
+          type: number
+          description: Unique ID of the student
+        firstName:
+          type: string
+          description: First name of the student
+        lastName:
+          type: string
+          description: Last name of the student
+        phoneNumber:
+          type: string
+          description: Phone number of the student
+        address:
+          type: string
+          description: address of the student
+      required:
+        - firstName
+        - lastName
+      example:
+        studentId: '101'
+        firstName: 'Santhesh'
+        lastName: 'Jingan'
+        phoneNumber: '9946248190'
+        address: '32. church strees, cochin'
+        
+  responses:
+    CourseSuccess:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Course'
+    4xxRespone:
+      description: Bad Request
+    5xxRespone:
+      description: Internal server error
+  securitySchemes:
+    BasicAuthentication:
+      type: http
+      scheme: basic
+    BearerAuthentication:
+      type: http
+      scheme: bearer
+    
+security: 
+  - BasicAuthentication: []
+  - BearerAuthentication: []
