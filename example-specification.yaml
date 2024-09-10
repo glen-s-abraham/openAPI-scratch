@@ -274,6 +274,82 @@ paths:
           $ref: '#/components/responses/4xxRespone'
         '5XX':
           $ref: '#/components/responses/5xxRespone'
+  /students/{studentId}:
+    summary: Operations related to a single student.
+    description: Oprations related to a single student.
+    
+    get:
+      tags:
+        - Student
+      summary: Get student details by student id.
+      description: Get student detaild by student id.
+      parameters: 
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get user detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'      
+    put:
+      tags:
+        - Student
+      summary: Update student details by student id.
+      description: Update student details by student id.
+      parameters: 
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Student details to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Updated user detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+    delete:
+      tags:
+        - Student
+      summary: Delete student details by student id.
+      description: Delete student details by student id.
+      parameters: 
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
 
 components:
   schemas:
