@@ -253,6 +253,27 @@ paths:
                 type: array
                 items:
                    $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
+    post:
+      tags:
+        - Student
+      summary: Add student to the system
+      description: Add student to a system
+      operationId: addStudents
+      responses:
+        '200':
+          description: Details of added student
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '4XX':
+          $ref: '#/components/responses/4xxRespone'
+        '5XX':
+          $ref: '#/components/responses/5xxRespone'
 
 components:
   schemas:
